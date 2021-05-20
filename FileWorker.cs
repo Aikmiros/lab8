@@ -20,7 +20,7 @@ namespace lab8
             string str;
             lock (sr) {
                 str = sr.ReadLine();
-                Console.WriteLine(str);
+                Console.WriteLine("Reading in thread {0}: {1}", Thread.CurrentThread.Name, str);
             }
             return str;
         }
@@ -29,7 +29,7 @@ namespace lab8
             string str = (string)argument;
             lock (sw) {
              sw.WriteLine(str);
-             Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);               
+             Console.WriteLine("Writing in thread {0}: {1}", Thread.CurrentThread.Name, str);               
             }
         }
 
@@ -37,8 +37,10 @@ namespace lab8
         {
             string str = (string)argument;
             mutex.WaitOne();
-                sw.WriteLine(str);
-                Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);
+
+            sw.WriteLine(str);
+            Console.WriteLine("Writing in thread {0}: {1}", Thread.CurrentThread.Name, str);
+
             mutex.ReleaseMutex();
         }
 
@@ -46,8 +48,10 @@ namespace lab8
         {
             string str = (string)argument;
             sema.WaitOne();
-                sw.WriteLine(str);
-                Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);
+
+            sw.WriteLine(str);
+            Console.WriteLine("Writing in thread {0}: {1}", Thread.CurrentThread.Name, str);
+
             sema.Release();
         }
 

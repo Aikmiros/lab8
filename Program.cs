@@ -56,12 +56,12 @@ namespace lab8
                 Console.WriteLine("Час виконання циклiв у трьох потоках: " + (int)diff.TotalMilliseconds);
             }
 
+            string filePath = "../../../file.txt";
 
             {
                 Console.WriteLine("\nЗавдання 2");
 
-                string path = "../../../file.txt";
-                using (FileStream file = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (FileStream file = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     FileWorker fw = new FileWorker(file);
 
@@ -75,7 +75,20 @@ namespace lab8
                         threads.Add(thread);
                     }
 
-                    while (CheckThreads(threads)) { }
+                    while (AreThreadsRunning(threads)) { }
+
+                    const int readThreadsNumber = 2;
+                    List<Thread> readThreads = new List<Thread>();
+
+                    for (int i = 1; i <= readThreadsNumber; i++) {
+                        Thread thread = new Thread(new ThreadStart(() => { fw.read(); }));
+                        thread.Name = i.ToString();
+                        thread.Start();
+                        readThreads.Add(thread);
+                    }
+
+                    while (AreThreadsRunning(readThreads)) { }
+
                     fw.Close();
                     file.Close();
                 }
@@ -85,8 +98,7 @@ namespace lab8
             {
                 Console.WriteLine("\nЗавдання 3");
 
-                string path = "../../../file.txt";
-                using (FileStream file = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (FileStream file = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     FileWorker fw = new FileWorker(file);
 
@@ -100,7 +112,7 @@ namespace lab8
                         threads.Add(thread);
                     }
 
-                    while (CheckThreads(threads)) { }
+                    while (AreThreadsRunning(threads)) { }
                     fw.Close();
                     file.Close();
                 }
@@ -108,8 +120,8 @@ namespace lab8
             
             {
                 Console.WriteLine("\nЗавдання 4");
-                string path = "../../../file.txt";
-                using (FileStream file = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+
+                using (FileStream file = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     FileWorker fw = new FileWorker(file);
 
@@ -123,7 +135,7 @@ namespace lab8
                         threads.Add(thread);
                     }
 
-                    while (CheckThreads(threads)) { }
+                    while (AreThreadsRunning(threads)) { }
                     fw.Close();
                     file.Close();
                 }
@@ -140,7 +152,7 @@ namespace lab8
             }
         }
 
-        public static bool CheckThreads(List<Thread> threads) {
+        public static bool AreThreadsRunning(List<Thread> threads) {
             bool threadsRunning = false;
             threads.ForEach((thread) => { threadsRunning = thread.ThreadState == ThreadState.Stopped ? threadsRunning : true; });
             return threadsRunning;
