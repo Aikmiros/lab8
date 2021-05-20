@@ -70,6 +70,10 @@ namespace lab8
                     Thread thread2 = new Thread(new ParameterizedThreadStart(fw.write));
                     thread2.Name = "Second";
                     thread2.Start("second line");
+
+                    while (thread1.ThreadState != ThreadState.Stopped || thread2.ThreadState != ThreadState.Stopped) { }
+                    fw.Close();
+                    file.Close();
                 }
             }
 
