@@ -8,6 +8,8 @@ namespace lab8
     {
         StreamWriter sw;
         StreamReader sr;
+        static Mutex mutex = new Mutex();
+        static Semaphore sema = new Semaphore(2, 5);
 
         public FileWorker(FileStream file) {
             sw = new StreamWriter(file);
@@ -25,10 +27,17 @@ namespace lab8
 
         public void write(object argument) {
             string str = (string)argument;
-            lock (sw) {
-                sw.WriteLine(str);
-                Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);
-            }
+            sema.WaitOne();
+            //mutex.WaitOne();
+            //lock (sw) {
+                for (int i = 0; i < 2; i++)
+                {
+                    sw.WriteLine(str);
+                    Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);
+                }
+            //}
+            //mutex.ReleaseMutex();
+            sema.Release();
 
         }
 
