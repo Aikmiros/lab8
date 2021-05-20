@@ -83,6 +83,29 @@ namespace lab8
             }
 
             {
+                Console.WriteLine("\nЗчитування файлiв");
+
+                using (FileStream file = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {
+                    FileWorker fw = new FileWorker(file);
+
+                    const int threadsNumber = 2;
+                    List<Thread> threads = new List<Thread>();
+
+                    for (int i = 1; i <= threadsNumber; i++) {
+                        Thread thread = new Thread(new ThreadStart(() => { fw.read(); }));
+                        thread.Name = i.ToString();
+                        thread.Start();
+                        threads.Add(thread);
+                    }
+
+                    while (AreThreadsRunning(threads)) { }
+                    fw.Close();
+                    file.Close();
+                }
+
+            }
+
+            {
                 Console.WriteLine("\nЗавдання 3");
 
                 using (FileStream file = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))

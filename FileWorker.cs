@@ -28,8 +28,8 @@ namespace lab8
         public void write(object argument) {
             string str = (string)argument;
             lock (sw) {
-             sw.WriteLine(str);
-             Console.WriteLine("Writing in thread {0}: {1}", Thread.CurrentThread.Name, str);               
+                sw.WriteLine(str);
+                Console.WriteLine("Writing in thread {0}: {1}", Thread.CurrentThread.Name, str);
             }
         }
 
