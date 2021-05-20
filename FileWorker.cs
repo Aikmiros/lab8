@@ -27,18 +27,28 @@ namespace lab8
 
         public void write(object argument) {
             string str = (string)argument;
-            sema.WaitOne();
-            //mutex.WaitOne();
-            //lock (sw) {
-                for (int i = 0; i < 2; i++)
-                {
-                    sw.WriteLine(str);
-                    Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);
-                }
-            //}
-            //mutex.ReleaseMutex();
-            sema.Release();
+            lock (sw) {
+             sw.WriteLine(str);
+             Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);               
+            }
+        }
 
+        public void write_mutex(object argument)
+        {
+            string str = (string)argument;
+            mutex.WaitOne();
+                sw.WriteLine(str);
+                Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);
+            mutex.ReleaseMutex();
+        }
+
+        public void write_sema(object argument)
+        {
+            string str = (string)argument;
+            sema.WaitOne();
+                sw.WriteLine(str);
+                Console.WriteLine("Thread name = {0}, value to write = {1}", Thread.CurrentThread.Name, str);
+            sema.Release();
         }
 
         public void Close() {
