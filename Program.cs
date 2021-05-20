@@ -1,14 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 
-namespace lab8 {
-    class Program {
+namespace lab8
+{
+    class Program
+    {
         static void Main(string[] args) {
             Console.WriteLine("Authors: Grybenko Yegor, Sukhanova Maria, Trembach Anastasia");
             Console.WriteLine("Group: IP-93");
             Console.WriteLine("Brigade: 3");
             Console.WriteLine("");
-
 
             {
                 Console.WriteLine("Завдання 1");
@@ -56,18 +58,20 @@ namespace lab8 {
 
             {
                 Console.WriteLine("\nЗавдання 2");
-                FileWorker fw = new FileWorker("../../../file.txt");
 
-                Thread thread1 = new Thread(new ParameterizedThreadStart(fw.write));
-                thread1.Name = "First";
-                thread1.Start("first line");
+                string path = "../../../file.txt";
+                using (FileStream file = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {
+                    FileWorker fw = new FileWorker(file);
 
-                Thread thread2 = new Thread(new ParameterizedThreadStart(fw.write));
-                thread2.Name = "Second";
-                thread2.Start("second line");
+                    Thread thread1 = new Thread(new ParameterizedThreadStart(fw.write));
+                    thread1.Name = "First";
+                    thread1.Start("first line");
+
+                    Thread thread2 = new Thread(new ParameterizedThreadStart(fw.write));
+                    thread2.Name = "Second";
+                    thread2.Start("second line");
+                }
             }
-
-
 
 
             Console.ReadKey();
@@ -75,7 +79,7 @@ namespace lab8 {
 
         public static void Sum() {
             int sum = 0;
-            for(int i = 1; i <= 100000000; i++) {
+            for (int i = 1; i <= 100000000; i++) {
                 sum += i;
             }
         }
