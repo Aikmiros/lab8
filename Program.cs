@@ -76,19 +76,6 @@ namespace lab8
                     }
 
                     while (AreThreadsRunning(threads)) { }
-
-                    const int readThreadsNumber = 2;
-                    List<Thread> readThreads = new List<Thread>();
-
-                    for (int i = 1; i <= readThreadsNumber; i++) {
-                        Thread thread = new Thread(new ThreadStart(() => { fw.read(); }));
-                        thread.Name = i.ToString();
-                        thread.Start();
-                        readThreads.Add(thread);
-                    }
-
-                    while (AreThreadsRunning(readThreads)) { }
-
                     fw.Close();
                     file.Close();
                 }
